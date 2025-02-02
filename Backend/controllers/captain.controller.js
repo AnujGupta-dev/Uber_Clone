@@ -50,7 +50,7 @@ module.exports.loginCaptain = async (req, res, next) => {
     const captain = await captainModel.findOne({ email }).select('+password');
 
     if (!captain) {
-        return res.status(401).json({ message: 'Invalid email or password' });
+        return res.status(401).json({ message: 'Capatain not register' });
     }
 
     const isMatch = await captain.comparePassword(password);
@@ -71,6 +71,7 @@ module.exports.getCaptainProfile = async (req, res, next) => {
 }
 
 module.exports.logoutCaptain = async (req, res, next) => {
+    
     const token = req.cookies.token || req.headers.authorization?.split(' ')[ 1 ];
 
     await blackListTokenModel.create({ token });
