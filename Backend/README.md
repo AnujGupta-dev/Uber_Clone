@@ -225,3 +225,33 @@ This endpoint allows an authenticated user to log out by invalidating their toke
 
 ## Notes
 - Ensure that the `Authorization` header is set to `Bearer token` or the token is provided in cookies when making requests to these endpoints.
+
+
+# Captain Registration Endpoint
+
+## Endpoint
+`POST /captains/register`
+
+## Description
+This endpoint allows a new captain to register by providing their personal and vehicle details.
+
+## Request Body
+- `email`: (string) The email of the captain. Must be a valid email address.
+- `password`: (string) The password for the captain's account. Must be at least 6 characters long.
+- `vehicle.color`: (string) The color of the captain's vehicle. Must be at least 3 characters long.
+- `vehicle.plate`: (string) The plate number of the captain's vehicle. Must be at least 3 characters long.
+- `vehicle.capacity`: (number) The capacity of the captain's vehicle. Must be at least 1.
+- `vehicle.vehicleType`: (string) The type of the captain's vehicle. Must be one of `car`, `motorcycle`, or `auto`.
+
+## Request Example
+```json
+{
+  "email": "captain@example.com",
+  "password": "password123",
+  "vehicle": {
+    "color": "red",
+    "plate": "ABC123",
+    "capacity": 4,
+    "vehicleType": "car"
+  }
+}
