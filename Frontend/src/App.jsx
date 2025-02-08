@@ -5,11 +5,12 @@ import Start from './pages/Start'
 import UserSignUp from './pages/UserSignUp'
 import CaptainLogin from './pages/CaptainLogin'
 import CaptainSignUp from './pages/CaptainSignUp'
-import Home from './pages/Home'
+import UserHome from './pages/UserHome'
 import UserProtectedWrapper from './pages/UserProtectedWrapper'
 import UserLogout from './pages/UserLogout'
 import CaptainHome from './pages/CaptainHome'
 import CaptainProtectedWrapper from './pages/CaptainProtectedWrapper'
+import CaptainLogout from './pages/CaptainLogout'
 
 
 function App() {
@@ -22,9 +23,10 @@ function App() {
       <Route path="/signup" element={<UserSignUp/>}/>
       <Route path="/captain-login" element={<CaptainLogin/>}/>
       <Route path="/captain-signup" element={<CaptainSignUp/>}/>
-      <Route path='/home' element={<UserProtectedWrapper><Home/></UserProtectedWrapper>}/>
+      <Route path='/home' element={<UserProtectedWrapper><UserHome/></UserProtectedWrapper>}/>
       <Route path='/user/logout' element={<UserProtectedWrapper><UserLogout/></UserProtectedWrapper>}/>
       <Route path='/captain-home' element={<CaptainProtectedWrapper><CaptainHome/></CaptainProtectedWrapper>}/> 
+      <Route path='/captain/logout' element={<CaptainProtectedWrapper><CaptainLogout/></CaptainProtectedWrapper>}/>
     </Routes>
     </div>
   )
