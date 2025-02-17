@@ -46,7 +46,7 @@ const CaptainHome = () => {
       <div>
         <img className='w-16 absolute left-5 top-5' src="https://logos-world.net/wp-content/uploads/2020/05/Uber-Logo-700x394.png" />
 
-        <Link to={'/capain-home'} className='fixed right-2 top-2 h-10 w-10 bg-white flex items-center justify-center rounded-full'>
+        <Link to={'/captain-home'} className='fixed right-2 top-2 h-10 w-10 bg-white flex items-center justify-center rounded-full'>
           <i className='ri-logout-box-r-line text-lg font-medium'></i>
         </Link>
       </div>

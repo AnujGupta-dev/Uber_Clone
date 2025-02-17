@@ -45,20 +45,18 @@ const RidePopUp = (props) => {
                         </div>
                     </div>
                 </div>
-               <div className='flex justify-center pb-2'>
+               <div className='flex justify-evenly p-4'>
                     <button onClick={()=>{
                                props.setConfirmRidePopUpPannel(true)
                                props.setRidePopuUpPannel(false)
                               }}
-                            className='bg-green-500 rounded-xl text-xl font-semibold p-2 w-[70%] '>Accept</button>  
-               </div>
-
-               <div className='flex justify-center pb-3'>
+                            className='bg-green-500 rounded-xl text-lg font-semibold p-1 w-[30%] '>Accept</button>
+           
                     <button onClick={()=>{
                          props.setRidePopuUpPannel(false)
                      }}
-                        className='bg-gray-300  text-gray-700 rounded-xl text-xl font-semibold p-2 w-[70%] '>Ignore</button>  
-               </div>
+                        className='bg-gray-300  text-gray-700 rounded-xl text-lg font-semibold p-1 w-[30%] '>Ignore</button>  
+              </div>
             </div>
   )
 }
