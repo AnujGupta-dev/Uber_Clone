@@ -1,4 +1,4 @@
-const rideModel = require('../models/ride.model');
+const rideModel = require('../model/ride.model');
 const mapService = require('./maps.service');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
@@ -46,16 +46,13 @@ module.exports.getFare = getFare;
 
 
 function getOtp(num) {
-    function generateOtp(num) {
         const otp = crypto.randomInt(Math.pow(10, num - 1), Math.pow(10, num)).toString();
         return otp;
-    }
-    return generateOtp(num);
 }
 
 
 module.exports.createRide = async ({
-    user, pickup, destination, vehicleType
+    user, pickup, destination, vehicleType , distanceTime
 }) => {
     if (!user || !pickup || !destination || !vehicleType) {
         throw new Error('All fields are required');
@@ -63,14 +60,14 @@ module.exports.createRide = async ({
 
     const fare = await getFare(pickup, destination);
 
-
-
     const ride = rideModel.create({
         user,
         pickup,
         destination,
         otp: getOtp(6),
-        fare: fare[ vehicleType ]
+        fare: fare[ vehicleType ],
+        distance:distanceTime.distance.value,
+        duration:distanceTime.duration.value,
     })
 
     return ride;
@@ -140,7 +137,7 @@ module.exports.endRide = async ({ rideId, captain }) => {
     const ride = await rideModel.findOne({
         _id: rideId,
         captain: captain._id
-    }).populate('user').populate('captain').select('+otp');
+    }).populate('user').populate('captain');
 
     if (!ride) {
         throw new Error('Ride not found');

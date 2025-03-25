@@ -1,8 +1,8 @@
 const rideService = require('../services/ride.service');
 const { validationResult } = require('express-validator');
 const mapService = require('../services/maps.service');
-const { sendMessageToSocketId } = require('../socket');
-const rideModel = require('../models/ride.model');
+const {sendMessageToSocketId} = require('../socket');
+const rideModel = require('../model/ride.model');
 
 
 module.exports.createRide = async (req, res) => {
@@ -11,32 +11,31 @@ module.exports.createRide = async (req, res) => {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const { userId, pickup, destination, vehicleType } = req.body;
+    const { pickup, destination, vehicleType } = req.body;
+
+    const distanceTime = await mapService.getDistanceTime(pickup, destination);
 
     try {
-        const ride = await rideService.createRide({ user: req.user._id, pickup, destination, vehicleType });
+        const ride = await rideService.createRide({ user: req.user._id, pickup, destination, vehicleType , distanceTime});
+
         res.status(201).json(ride);
 
-        return res.status(201).json(ride);
-
-        // const pickupCoordinates = await mapService.getAddressCoordinate(pickup);
-
+        const pickupCoordinates = await mapService.getAddressCoordinate(pickup);
+        const captainsInRadius = await mapService.getCaptainsInTheRadius(pickupCoordinates.ltd, pickupCoordinates.lng, 6);
 
 
-        // const captainsInRadius = await mapService.getCaptainsInTheRadius(pickupCoordinates.ltd, pickupCoordinates.lng, 2);
+        ride.otp = ""
 
-        // ride.otp = ""
+        const rideWithUser = await rideModel.findOne({ _id: ride._id }).populate('user');
 
-        // const rideWithUser = await rideModel.findOne({ _id: ride._id }).populate('user');
+        captainsInRadius.map(captain => {
 
-        // captainsInRadius.map(captain => {
+            sendMessageToSocketId(captain.socketId, {
+                event: 'new-ride',
+                data: rideWithUser
+            })
 
-        //     sendMessageToSocketId(captain.socketId, {
-        //         event: 'new-ride',
-        //         data: rideWithUser
-        //     })
-
-        // })
+        })
 
     } catch (err) {
 

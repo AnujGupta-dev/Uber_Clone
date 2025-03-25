@@ -31,19 +31,15 @@ module.exports.getDistanceTime = async (origin, destination) => {
 
     const url = `https://maps.gomaps.pro/maps/api/distancematrix/json?origins=${encodeURIComponent(origin)}&destinations=${encodeURIComponent(destination)}&key=${apiKey}`
 
-    
-
     try {
-
-
         const response = await axios.get(url);
         if (response.data.status === 'OK') {
 
-            if (response.data.rows[ 0 ].elements[ 0 ].status === 'ZERO_RESULTS') {
+            if (response.data.rows[0].elements[0].status === 'ZERO_RESULTS') {
                 throw new Error('No routes found');
             }
 
-            return response.data.rows[ 0 ].elements[ 0 ];
+            return response.data.rows[0].elements[0];
         } else {
             throw new Error('Unable to fetch distance and time');
         }
@@ -60,13 +56,14 @@ module.exports.getAutoCompleteSuggestions = async (input) => {
     }
 
     const apiKey = process.env.GOOGLE_MAPS_API;
-    const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(input)}&key=${apiKey}`;
+    const url = `https://maps.gomaps.pro/maps/api/place/autocomplete/json?input=${encodeURIComponent(input)}&key=${apiKey}`;
 
     try {
         const response = await axios.get(url);
         if (response.data.status === 'OK') {
-            return response.data.predictions.map(prediction => prediction.description).filter(value => value);
+            return response.data.predictions.map(prediction => prediction.description);
         } else {
+            console.log(response.data);
             throw new Error('Unable to fetch suggestions');
         }
     } catch (err) {
@@ -88,6 +85,7 @@ module.exports.getCaptainsInTheRadius = async (ltd, lng, radius) => {
         }
     });
 
+    
     return captains;
 
 

@@ -19,7 +19,7 @@ const UserProtectedWrapper = ({children}) => {
           }
       }).then(response => {
           if (response.status === 200) {
-            setuser(response.data.user)
+            setuser(response.data)
             setisLoading(false)
           }
       }).catch(err => {

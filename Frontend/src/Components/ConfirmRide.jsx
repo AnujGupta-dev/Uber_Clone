@@ -1,10 +1,12 @@
 import React from 'react'
 
-const ConfirmRide = ({ setConfirmRidePanel, confirmRideref ,setvehicleFound }) => {
+const ConfirmRide = ({ setConfirmRidePanel, confirmRideref ,setvehicleFound ,destination , pickup ,fare ,vehicleType ,createRide , confirmRidePanel }) => {
     return (
         <div>
-            <div ref={confirmRideref} className='fixed w-full z-10 bottom-0 pl-3 bg-white flex flex-col gap-2 translate-y-full'>
-                <h5 onClick={() => { setConfirmRidePanel(false) }}
+            <div ref={confirmRideref} className={`fixed w-full z-10 bottom-0 pl-3 bg-white flex flex-col gap-2 ${confirmRidePanel?'block':'hidden'}`}>
+                <h5 onClick={() => { setConfirmRidePanel(false)
+                                         setmap(true)
+                 }}
                     className='p-3 text-center absolute top-0 right-6 text-2xl'><i className="ri-arrow-down-wide-line"></i></h5>
                 <h4 className='text-xl font-semibold pt-2'>Confirm Ride</h4>
                 <div className='flex items-center justify-center'>
@@ -16,8 +18,8 @@ const ConfirmRide = ({ setConfirmRidePanel, confirmRideref ,setvehicleFound }) =
                             <i className="ri-map-pin-range-fill text-2xl"></i>
                         </h4>
                         <div className='flex flex-col w-[80%]'>
-                            <h5 className='text-xl font-bold'>562/11-A</h5>
-                            <p className='text-lg  text-gray-600'>Rajiv Chauk , Delhi</p>
+                            {/* <h5 className='text-xl font-bold'>562/11-A</h5> */}
+                            <p className='text-lg  text-gray-600'>{pickup}</p>
                         </div>
                     </div>
                     <div className='flex items-center  border-gray-300 border-b-3'>
@@ -25,8 +27,8 @@ const ConfirmRide = ({ setConfirmRidePanel, confirmRideref ,setvehicleFound }) =
                             <i className="ri-square-fill text-2xl"></i>
                         </h4>
                         <div className='flex flex-col w-[80%]'>
-                            <h5 className='text-xl font-bold'>Third Cafe Cofee</h5>
-                            <p className='text-lg text-gray-600 '>Jeeevan Palace Chauk , Delhi</p>
+                            {/* <h5 className='text-xl font-bold'>Third Cafe Cofee</h5> */}
+                            <p className='text-lg text-gray-600 '>{destination}</p>
                         </div>
                     </div>
                     <div className='flex items-center border-gray-300 border-b-3'>
@@ -34,7 +36,7 @@ const ConfirmRide = ({ setConfirmRidePanel, confirmRideref ,setvehicleFound }) =
                             <i className="ri-cash-line text-2xl"></i>
                         </h4>
                         <div className='flex flex-col w-[80%]'>
-                            <h5 className='text-xl font-bold'>₹193.20</h5>
+                            <h5 className='text-xl font-bold'>₹{vehicleType?fare[vehicleType]:''}</h5>
                             <p className='text-lg  text-gray-600'>Cash Cash</p>
                         </div>
                     </div>
@@ -42,7 +44,8 @@ const ConfirmRide = ({ setConfirmRidePanel, confirmRideref ,setvehicleFound }) =
                <div className='flex justify-center pb-3'>
                     <button onClick={()=>{
                                 setConfirmRidePanel(false)
-                                setvehicleFound(true) }}
+                                setvehicleFound(true)
+                                createRide() }}
                             className='bg-green-500 rounded-xl text-2xl font-bold p-3 w-[70%] '>Confirm button</button>  
                </div>
             </div>

@@ -3,67 +3,78 @@ const userService = require('../services/user.service');
 const { validationResult } = require('express-validator');
 const blackListTokenModel = require('../model/blacklisttoken.model');
 
-module.exports.registerUser = async (req, res , next) => {
+module.exports.registerUser = async (req, res, next) => {
     const errors = validationResult(req);
-    if(!errors.isEmpty()){
-        return res.status(400).json({errors: errors.array()});
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
     }
-    const {fullname, email, password} = req.body;
-    
-    const isUserAlready = await userModel.findOne({email})
+    const { fullname, email, password } = req.body;
 
-    if(isUserAlready){
+    const isUserAlready = await userModel.findOne({ email })
+
+    if (isUserAlready) {
         return res.status(400).json({ message: 'User already exist' });
     }
-    
+
     const hashedPassword = await userModel.hashPassword(password);
     const user = await userService.createUser({
-        firstname:fullname.firstname,
-        lastname:fullname.lastname,
+        firstname: fullname.firstname,
+        lastname: fullname.lastname,
         email,
         password: hashedPassword
     });
     const token = user.generateAuthToken();
-    res.status(201).json({token,user});
+    res.status(201).json({ token, user });
 }
 
-module.exports.loginUser = async (req, res , next) => {
+module.exports.loginUser = async (req, res, next) => {
     const errors = validationResult(req);
-    if(!errors.isEmpty()){
-        return res.status(400).json({errors: errors.array()});
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
     }
-    const {email, password} = req.body;
+    const { email, password } = req.body;
 
-    const user = await userModel.findOne({email}).select('+password');
+    const user = await userModel.findOne({ email }).select('+password');
 
-    if(!user){
-        return res.status(401).json({message: 'Invalid email or password'});
+    if (!user) {
+        return res.status(401).json({ message: 'Invalid email or password' });
     }
 
     const isMatch = await user.comparePassword(password);
 
-    if(!isMatch){
-        return res.status(401).json({message: 'Invalid credentials'});
+    if (!isMatch) {
+        return res.status(401).json({ message: 'Invalid credentials' });
     }
 
     const token = user.generateAuthToken();
     res.cookie('token', token);
-    
-    res.status(200).json({token,user});
+
+    res.status(200).json({ token, user });
 }
 
-module.exports.getUserProfile = async (req, res , next) => {
+module.exports.getUserProfile = async (req, res) => {
     const user = await userModel.findById(req.user._id);
     res.status(200).json(user);
 }
 
-module.exports.logoutUser = async (req, res , next) => {
-    res.clearCookie('token');
-    const token = req.cookies.token || req.headers.authorization.split(' ')[1] ;
-    
-    await blackListTokenModel.create({token});
+module.exports.logoutUser = async (req, res) => {
+    try {
+       
+        const token = req.cookies.token || req.headers.authorization.split(' ')[1];
 
-    res.status(200).json({message: 'Logged out successfully'});
+        if (!token) {
+            return res.status(400).json({ message: 'No token provided' });
+        }
+
+        await blackListTokenModel.create({ token });
+
+        res.clearCookie('token');
+
+        res.status(200).json({ message: 'Logged out successfully' });
+    }
+    catch (err) {
+        res.status(500).json({ message: 'Error in logging out internal server error' });
+    }
 }
 
 //method mai user aur statistic mai usermodel kyu use kiya hai
